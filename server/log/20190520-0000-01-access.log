@@ -1,2 +1,0 @@
-::1 - - [20/May/2019:17:03:39 +0000] "GET /docs/redocs/ HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
-::1 - - [20/May/2019:17:03:39 +0000] "GET /swagger.json HTTP/1.1" 304 - "http://localhost:3000/docs/redocs/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
