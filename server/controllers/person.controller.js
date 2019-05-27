@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import Project from '../models/project.model';
+import Person from '../models/person.model';
 
 exports.create = async (req, res) => {
   if (!req.body) {
@@ -8,113 +8,98 @@ exports.create = async (req, res) => {
   }
   if (!req.body.name) {
     res.status(500);
-    return res.send({ message: 'Project name is missing.' });
+    return res.send({ message: 'Person name is missing.' });
   }
 
   if (typeof req.body.name !== 'string') {
     res.status(500);
-    return res.send({ message: 'Project name is invalid. It should be a string' });
+    return res.send({ message: 'Person name is invalid. It should be a string' });
   }
 
-  await Project.create(req.body, (err, project) => {
+  await Person.create(req.body, (err, person) => {
     if (err) {
       res.status(500);
       return res.send({ message: err.message });
-    }
-
-    res.status(201);
-    return res.json(project);
+    }res.status(201);
+    return res.json(person);
   });
 
   res.status(500);
   return res.send({ message: 'internal server error' });
 };
 
-// search project
-exports.search = async (req, res) => {
-  const { q } = req.params;
-  await Project.find({ name: `/ ${q} /i` }, 'name', (err, docs) => {
-    if (err) {
-      res.status(500);
-      return res.send({ message: err.message });
-    }
-
-    res.status(200);
-    return res.json(docs);
-  });
-};
-
-// get project by Id
+// get person by Id
 exports.read = async (req, res) => {
   const { id } = req.params;
 
-  if (!Types.ObjectId.isValid(id.toString())) {
+  if (!Types.ObjectId.isValid(id)) {
     res.status(500);
-    return res.send({ message: 'Invalid project id' });
+    return res.send('Invalid person id');
   }
-  await Project.find({ _id: req.params.id }, (err, docs) => {
+
+  await Person.find({ _id: req.params.id }, (err, person) => {
     if (err) {
       res.status(500);
       return res.send({ message: err.message });
     }
 
     res.status(200);
-    return res.json(docs);
+    return res.json(person);
   });
 
   res.status(500);
   return res.send({ message: 'internal server error' });
 };
 
-// update a project
+// update a person
 exports.update = async (req, res) => {
   if (!req.body) {
     res.status(500);
-    return res.send({ message: 'Invalid request.' });
+    return res.send('Invalid request.');
   }
 
   if (!req.body.name) {
     res.status(500);
-    return res.send({ message: 'Project name is missing.' });
+    return res.send('Person name is missing.');
   }
 
   if (typeof req.body.name !== 'string') {
     res.status(500);
-    return res.send({ message: 'Project name is invalid. It should be a string' });
+    return res.send('Person name is invalid. It should be a string');
   }
 
   const { id } = req.params;
-  await Project.updateOne({ _id: id }, (err, docs) => {
+
+  await Person.updateOne({ _id: id }, (err, person) => {
     if (err) {
       res.status(500);
       return res.send({ message: err.message });
     }
 
     res.status(200);
-    return res.json(docs);
+    return res.json(person);
   });
 
   res.status(500);
   return res.send({ message: 'internal server error' });
 };
 
-// delete a project
+// delete a person
 exports.delete = async (req, res) => {
   const { id } = req.params;
 
   if (!Types.ObjectId.isValid(id)) {
     res.status(500);
-    return res.send({ message: 'Invalid project id' });
+    return res.send({ message: 'Invalid person id' });
   }
 
-  await Project.remove({ _id: id }, (err) => {
+  await Person.remove({ _id: id }, (err) => {
     if (err) {
       res.status(500);
       return res.send({ message: err.message });
     }
-
     res.status(200);
-    return res.send({ message: 'Project deleted successfully' });
+    return res.send('Person deleted successfully');
   });
 
   res.status(500);

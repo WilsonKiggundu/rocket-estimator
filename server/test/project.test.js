@@ -1,15 +1,9 @@
 import sinon from 'sinon';
-// import request from 'supertest';
-// import mongoose from 'mongoose';
-// import app from '../server';
 import controller from '../controllers/project.controller';
 
 require('should');
 
 process.env.ENV = 'Test';
-
-// const Project = mongoose.model('Project');
-// const agent = request.agent(app);
 
 const req = {
   body: null,

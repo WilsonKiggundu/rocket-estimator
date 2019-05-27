@@ -8,6 +8,11 @@ module.exports = model(
       required: true,
     },
 
+    project: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
+
     quantity: {
       type: Number,
       required: true,
@@ -17,6 +22,7 @@ module.exports = model(
       type: Number,
       required: true,
     },
+
     certainty: {
       type: Number,
       min: 0.5,

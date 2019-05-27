@@ -1,15 +1,10 @@
+import passport from 'passport';
 import controller from '../controllers/project.controller';
 
 module.exports = (app) => {
-  // add a new project
-  app.post('/api/project', controller.create);
-
-  // get project by projectId
-  app.get('/api/project/:id', controller.read);
-
-  // update a project with projectId
-  app.put('/api/project/:id', controller.update);
-
-  // delete a project
-  app.delete('/api/project/:id', controller.delete);
+  app.post('/api/project', passport.authenticate('jwt', { session: false }), controller.create);
+  app.get('/api/project', passport.authenticate('jwt', { session: false }), controller.search);
+  app.get('/api/project/:_id', passport.authenticate('jwt', { session: false }), controller.read);
+  app.put('/api/project/:id', passport.authenticate('jwt', { session: false }), controller.update);
+  app.delete('/api/project/:id', passport.authenticate('jwt', { session: false }), controller.delete);
 };

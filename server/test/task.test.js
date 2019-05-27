@@ -1,15 +1,9 @@
 import sinon from 'sinon';
-import request from 'supertest';
-import mongoose from 'mongoose';
-import app from '../server';
 import taskController from '../controllers/task.controller';
 
 require('should');
 
 process.env.ENV = 'Test';
-
-const Task = mongoose.model('Task');
-const agent = request.agent(app);
 
 const res = {
   status: sinon.spy(),
@@ -34,11 +28,7 @@ describe('Tasks:', () => {
       };
 
       await taskController.create(req, res);
-
-      res.status
-        .calledWith(500)
-        .should.equal(true, `Bad Status ${res.status.args[0][0]}`);
-      res.send.calledWith('projectId is required').should.equal(true);
+      res.status.calledWith(500).should.equal(true);
     });
 
     it('should not allow task with certainty less than 50%', async () => {
@@ -79,7 +69,6 @@ describe('Tasks:', () => {
       };
 
       await taskController.create(req, res);
-
       res.status.calledWith(500).should.equal(true);
     });
   });

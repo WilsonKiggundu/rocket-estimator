@@ -6,48 +6,49 @@ exports.create = async (req, res) => {
   // validate the request
   if (!req.body) {
     res.status(500);
-    return res.send('The request body can not be null');
+    return res.send({ message: 'The request body can not be null' });
   }
 
   if (!req.body.projectId) {
     res.status(500);
-    return res.send('projectId is required');
+    return res.send({ message: 'projectId is required' });
   }
 
   // create a task
-  try {
-    const task = await Task.create(req.body);
-
+  await Task.create(req.body, (err, task) => {
+    if (err) {
+      res.status(500);
+      return res.send({ message: err.message });
+    }
     res.status(201);
-
     return res.json(task);
-  } catch (error) {
-    res.status(500);
-    return res.send({ error: error.message });
-  }
+  });
+
+  res.status(500);
+  return res.send({ message: 'internal server error' });
 };
 
 // retrieve and return all tasks by projectId
-exports.findByProjectId = (req, res) => {
+exports.findByProjectId = async (req, res) => {
   if (!req.params.projectId) {
     res.status(500);
     return res.send({ message: 'Project Id is missing' });
   }
-  Task.find({ projectId: req.params.projectId })
-    .then((tasks) => {
-      res.status(200);
-      return res.send(tasks);
-    })
-    .catch((err) => {
+  await Task.find({ projectId: req.params.projectId }, (err, tasks) => {
+    if (err) {
       res.status(500);
-      return res.send({ message: err });
-    });
+      return res.send({ message: err.message });
+    }
+    res.status(200);
+    return res.send(tasks);
+  });
 
-  return res.send(null);
+  res.status(500);
+  return res.send({ message: 'internal server error' });
 };
 
 // update a task identified by the task Id
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
@@ -56,29 +57,35 @@ exports.update = (req, res) => {
   }
 
   if (Types.ObjectId.isValid(id)) {
-    Task.updateOne({ _id: id }, req.body)
-      .then(() => {
-        res.status(200);
-        return res.send(req.body);
-      })
-      .catch((err) => {
+    await Task.updateOne({ _id: id }, req.body, (err, task) => {
+      if (err) {
         res.status(500);
-        return res.send({ message: err });
-      });
+        return res.send({ message: err.message });
+      }
+      res.status(200);
+      return res.send(task);
+    });
   }
+
   res.status(500);
   return res.send({ message: 'Invalid task id' });
 };
 
 // delete a task
-exports.delete = (req, res) => {
+exports.delete = async (req, res) => {
   const { id } = req.params;
 
   if (Types.ObjectId.isValid(id)) {
-    Task.remove({ _id: req.params.id })
-      .then(() => res.status(200).send({ message: 'Task deleted' }))
-      .catch(err => res.status(500).send({ message: err }));
-  } else {
-    res.status(500).send({ message: 'Invalid task id' });
+    await Task.remove({ _id: req.params.id }, (err) => {
+      if (err) {
+        res.status(500);
+        return res.send({ message: err.message });
+      }
+      res.status(200);
+      return res.send({ message: 'Task deleted' });
+    });
   }
+
+  res.status(500);
+  return res.send({ message: 'Invalid task id' });
 };

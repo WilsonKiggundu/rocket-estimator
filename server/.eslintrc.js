@@ -23,7 +23,8 @@ module.exports = {
     "linebreak-style": [
       "error", process.env.NODE_ENV === 'prod' ? "unix" : "windows"
     ],
-    "no-underscore-dangle":  ["error", { "allow": ["_place"] }]
+    'no-console': 'off',
+    "no-underscore-dangle": ["error", { "allow": ["_place"] }]
     // "mocha/no-exclusive-tests": "error"
   },
 };
